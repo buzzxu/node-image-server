@@ -1,5 +1,5 @@
 'use strict'
-module.exports=class JsonError extends Error{
+module.exports = class JsonError extends Error{
     constructor(code,...args) {
         super(...args)
         if (Error.captureStackTrace) {
@@ -8,9 +8,7 @@ module.exports=class JsonError extends Error{
         this.code = code;
     }
 
-    render(ctx){
-        ctx.response.status = this.code
-        ctx.type="application/json"
-        ctx.body = {message:this.message,code:this.code,success:false}
+    render(response){
+        response.status(this.code).json({ success: true, code:this.code,message:this.message})
     }
 }

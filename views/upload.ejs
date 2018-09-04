@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title></title>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="/javascripts/jquery.upload.js"></script>
+    <script src="/images/javascripts/jquery.upload.js"></script>
 </head>
 <body>
-<input type="button" onclick="doUpload()" name="files" value="点击上传">
+<input type="button" onclick="doUpload()" name="file1" value="点击上传">
 <select id="webp">
     <option value="no">不需要</option>
     <option value="convert">转换</option>
@@ -22,7 +22,7 @@
             // 上传地址
             url: '/images/upload?webp='+$('#webp').val(),
             // 文件域名字
-            fileName: 'files',
+            fileName: 'file',
             // 其他表单数据
             params: {folder:'/xuxiang'},
             // 上传完成后, 返回json, text

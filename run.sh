@@ -1,18 +1,18 @@
 #!/bin/sh
 
-CONFIG_FILE=/app/core/config.js
+CONFIG_FILE=/app/config/config.js
 instance=max
 until [ $# -eq 0 ]
 do
  case "$1" in
  --defalut-img)
-  sed -i "18s/default.png/$2/g" $CONFIG_FILE
+  sed -i "15s/default.png/$2/g" $CONFIG_FILE
   shift 2;;
  --jwt-secret)
- sed -i "20s/123456/$2/g" $CONFIG_FILE
+ sed -i "25s/123456/$2/g" $CONFIG_FILE
  shift 2;;
  --jwt-algorithm)
- sed -i "21s/HS512/$2/g" $CONFIG_FILE
+ sed -i "26s/HS512/$2/g" $CONFIG_FILE
  shift 2;;
  --instance)
  instance=$2

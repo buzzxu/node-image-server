@@ -8,9 +8,9 @@ RUN apk update && apk upgrade \
 RUN mkdir -p /app
 RUN mkdir -p /data/logs/images
 
-COPY . /app
 WORKDIR /app
 COPY run.sh .
+COPY . /app
 
 RUN rm -rf /app/img
 

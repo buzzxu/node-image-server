@@ -1,11 +1,9 @@
-const router = require('koa-router')({
-    prefix:'/images/index'
-})
+var express = require('express');
+var router = express.Router();
 
-router.get('/upload.html', async (ctx, next) => {
-  await ctx.render('upload')
-})
+/* GET home page. */
+router.get('/upload.html', function(req, res, next) {
+  res.render('upload');
+});
 
-
-
-module.exports = router
+module.exports = router;
