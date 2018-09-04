@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="/javascripts/jquery.upload.js"></script>
+</head>
+<body>
+<input type="button" onclick="doUpload()" name="files" value="点击上传">
+<select id="webp">
+    <option value="no">不需要</option>
+    <option value="convert">转换</option>
+</select>
+</body>
+
+<script type="application/javascript">
+
+    function doUpload() {
+        // 上传方法
+        $.upload({
+            // 上传地址
+            url: '/images/upload?webp='+$('#webp').val(),
+            // 文件域名字
+            fileName: 'files',
+            // 其他表单数据
+            params: {folder:'/xuxiang'},
+            // 上传完成后, 返回json, text
+            dataType: 'json',
+            // 上传之前回调,return true表示可继续上传
+            onSend: function() {
+                return true;
+            },
+            // 上传之后回调
+            onComplate: function(data) {
+                if(data.success){
+                    $('#out').text(data.file);
+                }else{
+                    $('#out').text(data.message);
+                }
+            }
+        });
+    }
+</script>
+<p id="out"></p>
+</html>
