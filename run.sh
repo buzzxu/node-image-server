@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONFIG_FILE=/node-picture-ser/core/config.js
+CONFIG_FILE=/app/core/config.js
 instance=max
 until [ $# -eq 0 ]
 do
