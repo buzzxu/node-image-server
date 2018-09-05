@@ -1,10 +1,19 @@
 
+# node-image-server
+![GitHub](https://img.shields.io/github/stars/buzzxu/node-image-server.svg?style=social&label=Star&maxAge=259)
+
 ### Support Docker
+
+#### Supported tags and respective Dockerfile links
+- ``Koa``[(Dockerfile)](https://github.com/buzzxu/node-image-server/blob/master/Dockerfile)
+- ``Express`` [(Dockerfile)](https://github.com/buzzxu/node-image-server/blob/express/Dockerfile)
+
 #### 参数
 - ``--defalut-img``   默认图片
 - ``--jwt-secret``    密钥
 - ``--jwt-algorithm`` 密钥算法
 - ``--instance``      实例数量
+
 ```
 docker run -d --name node-image  -p 3000:3000  -v /tmp/logs/images:/data/logs/images -v /data/images:/data/images  buzzxu/node-image-server:latest  --jwt-secret 123456  --jwt-algorithm HS512
 ```
