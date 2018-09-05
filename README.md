@@ -1,18 +1,27 @@
-# node-image-server
 
-###PM2 安装
+### Support Docker
+#### 参数
+- ``--defalut-img``   默认图片
+- ``--jwt-secret``    密钥
+- ``--jwt-algorithm`` 密钥算法
+- ``--instance``      实例数量
+```
+docker run -d --name node-image  -p 3000:3000  -v /tmp/logs/images:/data/logs/images -v /data/images:/data/images  buzzxu/node-image-server:latest  --jwt-secret 123456  --jwt-algorithm HS512
+```
+### 安装指南
+#### PM2 安装
 ```
 npm install pm2 -g
 ```
-### ImageMagic 安装
+#### ImageMagic 安装
 ```
 yum install libpng libjpeg
 ```
-###先从此地址下载 支持的图片格式 JPG PNG等
+#### 先从此地址下载 支持的图片格式 JPG PNG等
 ```
 http://www.imagemagick.org/download/delegates/
 ```
-### 安装jpeg
+#### 安装jpeg
 ```
 tar xvfz jpegsrc.v9b.tar.gz
 cd jpeg-9b
@@ -20,21 +29,21 @@ cd jpeg-9b
 make
 make install
 ```
-### 安装PNG
+#### 安装PNG
 ```
 libpng-1.6.31.tar.xz
 ./configure
 ```
-## webp 安装
+#### webp 安装
 ```
 yum info libwebp
 ```
-### mac brew 安装
+#### mac brew 安装
 ```
 brew instal webp
 brew install imagemagick --with-webp
 ```
-## 最后安装ImageMagick
+#### 最后安装ImageMagick
 ```
 cd /usr/local/src
 wget https://www.imagemagick.org/download/ImageMagick.tar.gz
@@ -51,7 +60,7 @@ make uninstall
 
 
 
-## 使用
+### 使用
 #### 上传文件
 ```
 POST 127.0.0.1:7589/images/upload
