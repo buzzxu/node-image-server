@@ -22,9 +22,10 @@ module.exports = class Upload {
      * @param fileExt    文件扩展名
      * @returns {Promise<{buffer: *, ext: *}>}
      */
-    static send(params,folders, filename,fileExt){
+    static send(ctx,params,folders, filename,fileExt){
 
     }
+
 
     /**
      * 删除文件

@@ -1,6 +1,7 @@
 'use strict'
 const Image = require('./Image')
 const _ = require('lodash')
+const etag = require('etag')
 const util = require('util')
 const path = require('path')
 const uuid = require('uuid-js')
@@ -113,7 +114,7 @@ module.exports = class Local extends Image{
      * @param fileExt    文件扩展名
      * @returns {Promise<{buffer: *, ext: *}>}
      */
-    async send(params,folders, filename,fileExt){
+    async send(ctx,params,folders, filename,fileExt){
         if(!fileExt){
             fileExt = path.extname(filename).substr(1)
         }
@@ -126,6 +127,14 @@ module.exports = class Local extends Image{
             let targetPath = getUploadDir(path.join.apply(path,folders))
             let exists = fs.existsSync(targetPath)
             if(exists){
+                let stat = fs.statSync(targetPath)
+                let $etag = etag(stat)
+                ctx.status=200
+                ctx.etag = $etag
+                ctx.lastModified=stat.mtime.toUTCString()
+                if(ctx.fresh){
+                    return {status:304}
+                }
                 let buffer
                 if(Object.keys(params).length === 0){
                     //此处返回的是fs.ReadStream
@@ -190,9 +199,9 @@ module.exports = class Local extends Image{
                     buffer = await gmBuffer($gm,fileExt)
                 }
                 if(!_.isNil(params.base64)){
-                    return {buffer:buffer.toString("base64"),contextType:'text/plan'}
+                    return {status:200,buffer:buffer.toString("base64"),contextType:'text/plan'}
                 }
-                return {buffer:buffer,contextType:config.contentType.get(fileExt)}
+                return {status:200,buffer:buffer,contextType:config.contentType.get(fileExt)}
             }else{
                 throw new ImageError(404)
             }

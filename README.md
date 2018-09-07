@@ -9,6 +9,7 @@
 - ``Express`` [(Dockerfile)](https://github.com/buzzxu/node-image-server/blob/express/Dockerfile)
 
 #### 参数
+- ``--maxAge``        ``Cache-Control:max-age=31536000`` 
 - ``--defalut-img``   默认图片
 - ``--jwt-secret``    密钥
 - ``--jwt-algorithm`` 密钥算法

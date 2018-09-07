@@ -8,6 +8,7 @@ module.exports = {
     port:3000,
     DIR_UPLOAD:path.join('/data', 'images'),
     model:'local',
+    maxAge:31536000,//1 year
     contentType: new Map([
         ['jpg','image/jpeg'],
         ['jpeg','image/jpeg'],

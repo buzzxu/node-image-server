@@ -1,5 +1,7 @@
 const Koa = require('koa')
 const app = new Koa()
+const conditional = require('koa-conditional-get')
+const etag = require('koa-etag');
 const convert = require('koa-convert');
 const views = require('koa-views')
 const json = require('koa-json')
@@ -19,6 +21,8 @@ core.choose()
 core.IMAGE.check(path.join(__dirname, 'img'))
 // error handler
 // onerror(app)
+app.use(conditional());
+app.use(etag());
 app.use(error.errorHandler)
 // middlewares
 app.use(bodyparser({
