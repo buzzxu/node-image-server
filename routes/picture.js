@@ -213,11 +213,11 @@ module.exports = router;
 
 function sendFile(folders, filename, req,res,fileExt){
     send(req,res,req.query,folders,filename,fileExt).then(result=>{
-        res.set('Cache-Control',`max-age=${config.maxAge}`)
         if(result.status == 304){
             res.sendStatus(result.status);
             return;
         }
+        res.set('Cache-Control',`max-age=${config.maxAge}`)
         if(result.data instanceof fs.ReadStream){
             result.data.on('data',function (chunk) {
                 res.write(chunk);
