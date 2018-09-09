@@ -12,6 +12,7 @@ var OPTIONS = {
     },
     name: '<<图片服务器(读取)>>',
     port: 3000,
+    maxAge:31536000,
     'default': 'default.png',
     mode: 'read',
     contentTypes: {

@@ -5,14 +5,17 @@ instance=max
 until [ $# -eq 0 ]
 do
  case "$1" in
+ --maxAge)
+  sed -i "15s/31536000/$2/g" $CONFIG_FILE
+  shift 2;;
  --defalut-img)
-  sed -i "15s/default.png/$2/g" $CONFIG_FILE
+  sed -i "16s/default.png/$2/g" $CONFIG_FILE
   shift 2;;
  --jwt-secret)
- sed -i "25s/123456/$2/g" $CONFIG_FILE
+ sed -i "26s/123456/$2/g" $CONFIG_FILE
  shift 2;;
  --jwt-algorithm)
- sed -i "26s/HS512/$2/g" $CONFIG_FILE
+ sed -i "27s/HS512/$2/g" $CONFIG_FILE
  shift 2;;
  --instance)
  instance=$2

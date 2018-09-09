@@ -12,17 +12,18 @@ var multipartMiddleware = multipart();
 var  fs = require('fs'),mkdirp=require('mkdirp')
     ,   gm = require('gm').subClass({imageMagick: true});
 var jwt = require('express-jwt');
+var etag = require('etag');
 var config = require('../config/config')
 
 
 //默认路径
-router.get('/:filename', function (req, res) {
+/*router.get('/:filename', function (req, res) {
 
     var filePath = path.join( config.UploadDir, req.params.filename);
     fs.exists(filePath, function (exists) {
         res.sendFile(exists ? filePath : path.join(config.UploadDir, config.default));
     });
-});
+});*/
 router.get('/:filename',function (req, res) {
      sendFile([], req.params.filename, req,res);
 });
@@ -211,9 +212,13 @@ const resizeTag = ['!',"%",'^','>','<'];
 module.exports = router;
 
 function sendFile(folders, filename, req,res,fileExt){
-    send(req.query,folders,filename,fileExt).then(result=>{
+    send(req,res,req.query,folders,filename,fileExt).then(result=>{
+        res.set('Cache-Control',`max-age=${config.maxAge}`)
+        if(result.status == 304){
+            res.sendStatus(result.status);
+            return;
+        }
         if(result.data instanceof fs.ReadStream){
-            res.set('Content-Type', result.contextType);
             result.data.on('data',function (chunk) {
                 res.write(chunk);
             });
@@ -235,13 +240,12 @@ function sendFile(folders, filename, req,res,fileExt){
                 res.status(500);
                 res.send(error.message);
             })
-
         }
     }).catch(err=>{
         res.status(err.code).sendFile(getFilePath());
     });
 }
-const send =  (params,folders, filename,fileExt)=>{
+const send =  (req,res,params,folders, filename,fileExt)=>{
     return new Promise((resolve, reject) => {
         if(_.isNil(fileExt)){
             fileExt = path.extname(filename).substr(1)
@@ -255,6 +259,13 @@ const send =  (params,folders, filename,fileExt)=>{
             var filePath = getFilePath(path.join.apply(path, folders));
             let exists =  fs.existsSync(filePath);
             if(exists){
+                let stat = fs.statSync(filePath);
+                res.set('Last-Modified',stat.mtime.toUTCString());
+                res.set('ETag',etag(stat));
+                if(req.fresh){
+                    resolve({status:304});
+                    return;
+                }
                 let data;
                 if(Object.keys(params).length === 0){
                     data = fs.createReadStream(filePath);
@@ -317,7 +328,7 @@ const send =  (params,folders, filename,fileExt)=>{
 
                     data =  gmBuffer($gm,fileExt)
                 }
-                resolve({data:data,contextType:config.contentTypes[fileExt]});
+                resolve({status:200,data:data,contextType:config.contentTypes[fileExt]});
 
             }else{
                 let err = new Error();
