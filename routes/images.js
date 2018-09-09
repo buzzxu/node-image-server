@@ -72,12 +72,12 @@ const sendImage = async (ctx,folder)=>{
     try{
 
         let result = await core.IMAGE.send(ctx,ctx.query,folder,ctx.params.filename,fileExt)
+        ctx.set('Cache-Control',`max-age=${config.maxAge}`)
         if(result.status==304){
             ctx.status = 304
             ctx.body = null
             return null
         }
-        ctx.set('Cache-Control',`max-age=${config.maxAge}`)
         ctx.type = result.contextType
         ctx.body = result.buffer
     }catch (err){
