@@ -5,7 +5,7 @@ instance=max
 until [ $# -eq 0 ]
 do
  case "$1" in
---maxAge)
+ --maxAge)
   sed -i "11s/31536000/$2/g" $CONFIG_FILE
   shift 2;;
  --defalut-img)
@@ -29,4 +29,4 @@ cat $CONFIG_FILE
 echo "===================================="
 
 
-pm2-runtime start bin/www  --env production --watch -i $instance --name "image"  --output /data/logs/images/out.log --error /data/logs/images/error.log
+pm2-runtime start bin/www  --env production -i $instance --name "image" --max_memory_restart 100M  --output /data/logs/images/out.log --error /data/logs/images/error.log
