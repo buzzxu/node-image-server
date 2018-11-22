@@ -2,7 +2,7 @@
   "appenders": {
     "access": {
       "type": "dateFile",
-      "filename": "/data/logs/images/access.log",
+      "filename": "/data/logs/access.log",
       "pattern": ".yyyy-MM-dd",
       "maxLogSize":31457280,
       "backups": 3,
@@ -13,7 +13,7 @@
       }},
     "image": {
       "type": "dateFile",
-      "filename": "/data/logs/images/image.log",
+      "filename": "/data/logs/image.log",
       "pattern": ".yyyy-MM-dd",
       "maxLogSize":31457280,
       "backups": 3,
@@ -25,7 +25,7 @@
     },
     "error": {
       "type": "dateFile",
-      "filename": "/data/logs/images/error.log",
+      "filename": "/data/logs/error.log",
       "pattern": ".yyyy-MM-dd",
       "maxLogSize":31457280,
       "backups": 3,

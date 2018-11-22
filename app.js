@@ -8,7 +8,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const body = require('koa-better-body')
-//const logger = require('koa-logger')
+// const logger = require('koa-logger')
 const path = require('path')
 const Router = require('koa-router')
 const core = require('./core/index')
@@ -31,11 +31,10 @@ app.use(bodyparser({
 }))
 app.use(convert(body()))
 app.use(json())
-app.use((ctx, next) => {
-    new Promise((resolve, reject) => {
-        logger.express(ctx.req, ctx.res, err => (err ? reject(err) : resolve(ctx)));
-    }).then(next)
-})
+app.use(logger.koa)
+// logger
+
+// app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {

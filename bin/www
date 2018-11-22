@@ -8,7 +8,8 @@ var app = require('../app');
 var debug = require('debug')('image:server');
 var http = require('http');
 const config = require('../core/config');
-const logger = require('../core/logger/logger');
+const log4js = require('koa-log4')
+const logger = log4js.getLogger('image')
 /**
  * Get port from environment and store in Express.
  */
@@ -88,6 +89,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  logger.image.info('%s已经启动,正监听:%s', config.name, config.port);
-  logger.image.info('图片存储目录:%s',config.DIR_UPLOAD)
+  logger.info('%s已经启动,正监听:%s', config.name, config.port);
+  logger.info('图片存储目录:%s',config.DIR_UPLOAD)
 }
