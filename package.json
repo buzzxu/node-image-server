@@ -28,6 +28,7 @@
     "koa-static": "^5.0.0",
     "koa-views": "^6.1.4",
     "lodash": "^4.17.10",
+    "log4js": "^3.0.6",
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
     "uuid-js": "^0.7.5"

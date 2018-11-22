@@ -8,12 +8,13 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const body = require('koa-better-body')
-const logger = require('koa-logger')
+//const logger = require('koa-logger')
 const path = require('path')
 const Router = require('koa-router')
 const core = require('./core/index')
 const error = require('./core/errors/error')
 
+const logger = require('./core/logger/logger')
 const index = require('./routes/index')
 const images = require('./routes/images')
 
@@ -30,19 +31,16 @@ app.use(bodyparser({
 }))
 app.use(convert(body()))
 app.use(json())
-app.use(logger())
+app.use((ctx, next) => {
+    new Promise((resolve, reject) => {
+        logger.express(ctx.req, ctx.res, err => (err ? reject(err) : resolve(ctx)));
+    }).then(next)
+})
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
-// logger
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-})
 
 // routes '/images'
 let router = new Router()

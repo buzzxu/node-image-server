@@ -8,6 +8,7 @@ const path = require('path')
 const moment = require('moment')
 const core = require('../core/index')
 const config = require('../core/config')
+const logger = require('../core/logger/logger')
 const ImageError = require('../core/errors/ImageError')
 const JsonError = require('../core/errors/JsonError')
 /**
@@ -23,6 +24,7 @@ router.post('/upload',jwt(config.jwt),async (ctx, next) => {
             let path = await core.IMAGE.write(files,fields)
             ctx.body = { success: true, file: path }
         }catch (err){
+            logger.error.error(err.message)
             if(err instanceof JsonError){
                 err.render(ctx)
             }else{

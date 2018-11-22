@@ -1,0 +1,46 @@
+{
+  "appenders": {
+    "access": {
+      "type": "dateFile",
+      "filename": "/data/logs/images/access.log",
+      "pattern": ".yyyy-MM-dd",
+      "maxLogSize":31457280,
+      "backups": 3,
+      "compress":true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+      }},
+    "image": {
+      "type": "dateFile",
+      "filename": "/data/logs/images/image.log",
+      "pattern": ".yyyy-MM-dd",
+      "maxLogSize":31457280,
+      "backups": 3,
+      "compress":true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+      }
+    },
+    "error": {
+      "type": "dateFile",
+      "filename": "/data/logs/images/error.log",
+      "pattern": ".yyyy-MM-dd",
+      "maxLogSize":31457280,
+      "backups": 3,
+      "compress":true,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+      }},
+    "console": { "type": "console"}
+  },
+  "replaceConsole": true,
+  "categories":{
+    "default": { "appenders": ["console","access"], "level": "all" },
+    "access": { "appenders": ["access"], "level": "all" },
+    "image": { "appenders": ["image"], "level": "info" },
+    "error": { "appenders": ["error"], "level": "error" }
+  }
+}
