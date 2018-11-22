@@ -17,12 +17,9 @@ var OPTIONS = {
     mode: 'read',
     contentTypes: {
         'jpg': 'image/jpeg',
-        'JPG': 'image/jpeg',
         'jpeg': 'image/jpeg',
-        'JPEG': 'image/jpeg',
         'git': 'image/gif',
         'png': 'image/png',
-        'PNG': 'image/png',
         'webp': 'image/webp'
     },
     jwt:{

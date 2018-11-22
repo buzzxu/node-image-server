@@ -14,6 +14,7 @@ var  fs = require('fs'),mkdirp=require('mkdirp')
 var jwt = require('express-jwt');
 var etag = require('etag');
 var config = require('../config/config')
+let logger = require('../core/logger')
 
 
 //默认路径
@@ -48,7 +49,7 @@ router.get('/:folder1/:folder2/:folder3/:folder4/:filename', function (req, res)
  */
 router.post('/upload',jwt(config.jwt),multipartMiddleware,function (req, res) {
     if(!req.files){
-        return res.status(500).send({ success: false,message:'no file' });
+        return res.status(400).send({ success: false,message:'no file' });
     }
     var files = req.files;
     writeFile(files,req,res);
@@ -61,7 +62,7 @@ router.post('/upload',jwt(config.jwt),multipartMiddleware,function (req, res) {
  */
 router.delete('/delete',jwt(config.jwt),function (req,res) {
     if(!req.query.file){
-        return res.status(500).send({ success: false,message:'请传入文件路径' });
+        return res.status(400).send({ success: false,message:'请传入文件路径' });
     }
     deleteFile(req,res);
 });
@@ -96,6 +97,7 @@ function writeFile(files,request,response) {
                         .then(urls=>{
                             response.json({ success: true, file: urls });
                         }).catch(err=>{
+                            logger.image.error(err.message );
                             response.status(err.code).json({ success: false, message: err.message });
                         });
                 }catch (e) {
@@ -108,6 +110,7 @@ function writeFile(files,request,response) {
                 .then(url=>{
                     response.json({ success: true, file: url });
                 }).catch(err=>{
+                logger.image.error(err.message );
                 response.status(err.code).json({ success: false, message: err.message });
             })
         }
@@ -135,6 +138,7 @@ function deleteFile(req,res) {
                 if(fs.existsSync(webpFile)){
                     fs.unlink(webpFile,function (err) {
                         if(err){
+                            logger.image.error(err.message);
                             res.status(500).send({success: false, message: err.message,error:err});
                         }
                         res.json({ success: true });
@@ -237,18 +241,20 @@ function sendFile(folders, filename, req,res,fileExt){
                 }
 
             }).catch(error => {
+                logger.image.error(err.message );
                 res.status(500);
                 res.send(error.message);
             })
         }
     }).catch(err=>{
+        logger.image.error(err.message );
         res.status(err.code).sendFile(getFilePath());
     });
 }
 const send =  (req,res,params,folders, filename,fileExt)=>{
     return new Promise((resolve, reject) => {
         if(_.isNil(fileExt)){
-            fileExt = path.extname(filename).substr(1)
+            fileExt = _.toLower(path.extname(filename).substr(1))
         }
         if (!config.contentTypes[fileExt]){
             let err = new Error();
