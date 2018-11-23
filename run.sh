@@ -29,4 +29,4 @@ cat $CONFIG_FILE
 echo "===================================="
 
 
-pm2-runtime start bin/www  --env production -i $instance --name "image" --max-memory-restart 100M  --output /data/logs/images/out.log --error /data/logs/images/error.log
+pm2-runtime start bin/www  --env production -i $instance --name "image" --max-memory-restart 100M  --output /data/logs/out.log --error /data/logs/error.log

@@ -18,4 +18,5 @@ RUN npm install --production --registry=https://registry.npm.taobao.org
 RUN npm install pm2 -g --registry=https://registry.npm.taobao.org
 RUN apk del git && rm -rf /var/cache/apk/*
 
+ENV NODE_ENV production
 ENTRYPOINT ["/bin/sh","run.sh"]
