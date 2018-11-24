@@ -16,6 +16,15 @@ module.exports = {
         ['png','image/png'],
         ['webp','image/webp']
     ]),
+    //是否支持的类型
+    isSupportCT:function (val) {
+        for (let value of this.contentType.values()) {
+            if(value === val){
+                return true
+            }
+        }
+        return false
+    },
     defaultImg:'default.png',
     jwt:{
         secret:'123456',

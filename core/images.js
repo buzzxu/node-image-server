@@ -27,10 +27,10 @@ exports.write = async (files,params)=> {
         return ''
     }else{
         let file = files[0]
-        let ext = _.toLower(file.name.substring(file.name.length,file.name.indexOf('.')+1))
-        if (!(ext && config.contentType.has(ext))){
+        if (!config.isSupportCT(file.type)){
             throw new JsonError( 406,`不支持${file.type}上传`)
         }else{
+            let ext = _.toLower(file.name.substring(file.name.length,file.name.indexOf('.')+1))
             if(!_.isNil(params.webp)){
                 ext = 'webp'
             }
