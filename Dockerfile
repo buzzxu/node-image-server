@@ -7,8 +7,6 @@ RUN apk update && apk upgrade && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
     mkdir -p /app && \
-    npm install --production --registry=https://registry.npm.taobao.org && \
-    npm install pm2 -g --registry=https://registry.npm.taobao.org && \
     apk del git && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
@@ -16,6 +14,9 @@ RUN apk update && apk upgrade && \
 COPY . /app
 WORKDIR /app
 COPY run.sh .
+
+RUN npm install --production --registry=https://registry.npm.taobao.org && \
+    npm install pm2 -g --registry=https://registry.npm.taobao.org
 
 ENV TZ Asia/Shanghai
 ENV NODE_ENV production
