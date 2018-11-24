@@ -17,6 +17,6 @@ COPY . /app
 WORKDIR /app
 COPY run.sh .
 
-ENV TZ='Asia/Shanghai'
+ENV TZ Asia/Shanghai
 ENV NODE_ENV production
 ENTRYPOINT ["/bin/sh","run.sh"]
