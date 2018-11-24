@@ -22,6 +22,9 @@ core.choose()
 core.IMAGE.check(path.join(__dirname, 'img'))
 // error handler
 // onerror(app)
+// logger
+app.use(logger.koa)
+
 app.use(conditional());
 app.use(etag());
 app.use(error.errorHandler)
@@ -31,10 +34,7 @@ app.use(bodyparser({
 }))
 app.use(convert(body()))
 app.use(json())
-app.use(logger.koa)
-// logger
 
-// app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {

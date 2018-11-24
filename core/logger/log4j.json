@@ -9,7 +9,7 @@
       "compress":true,
       "layout": {
         "type": "pattern",
-        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m%n"
       }},
     "image": {
       "type": "dateFile",
@@ -20,7 +20,7 @@
       "compress":true,
       "layout": {
         "type": "pattern",
-        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m%n"
       }
     },
     "error": {
@@ -32,7 +32,7 @@
       "compress":true,
       "layout": {
         "type": "pattern",
-        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m%n"
       }},
     "console": { "type": "console"}
   },

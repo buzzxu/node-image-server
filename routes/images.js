@@ -5,7 +5,6 @@ const router = require('koa-router')({
 })
 const jwt = require('koa-jwt')
 const path = require('path')
-const moment = require('moment')
 const core = require('../core/index')
 const config = require('../core/config')
 const log4js = require('koa-log4')
@@ -19,13 +18,13 @@ router.post('/upload',jwt(config.jwt),async (ctx, next) => {
     let files = ctx.request.files
     let fields = ctx.request.fields
     if(!files){
-        ctx.body = { success: false,message:'no file' }
+        ctx.body = { success: false,message:'无法在请求中获取图片',code:404}
     }else{
         try {
             let path = await core.IMAGE.write(files,fields)
-            ctx.body = { success: true, file: path }
+            logger.info('Upload success,path:',path)
+            ctx.body = { success: true, file: path,code:200}
         }catch (err){
-            logger.error.error(err.message)
             if(err instanceof JsonError){
                 err.render(ctx)
             }else{

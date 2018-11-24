@@ -12,7 +12,7 @@ module.exports =  (err,ctx)=>{
     }else if(err instanceof HtmlError){
         err.render(ctx)
     }else{
-        logger.error('server error', err, ctx)
+        logger.error('server error', err.message, ctx)
     }
 }
 
@@ -23,7 +23,7 @@ module.exports.errorHandler = async (ctx, next) => {
                 ctx.status = 401;
                 ctx.body = '验证失败，服务器拒绝响应'
             } else {
-                logger.error(err)
+                logger.error(err.message)
                 throw err;
             }
         })
