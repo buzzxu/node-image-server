@@ -7,6 +7,7 @@ const mkdirp = require('mkdirp')
 const fse = require('fs-extra')
 const gm = require('gm').subClass({imageMagick: true})
 const config = require('./config')
+const $util = require('./util')
 const ImageError = require('./errors/ImageError')
 const JsonError = require('./errors/JsonError')
 const resizeTag = ['!',"%",'^','>','<']
@@ -27,7 +28,7 @@ exports.write = async (files,params)=> {
         return ''
     }else{
         let file = files[0]
-        if (!config.isSupportCT(file.type)){
+        if (!$util.isSupportCT(file.type)){
             throw new JsonError( 406,`不支持${file.type}上传`)
         }else{
             let ext = _.toLower(file.name.substring(file.name.length,file.name.indexOf('.')+1))
