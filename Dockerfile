@@ -19,5 +19,6 @@ RUN npm install --production --registry=https://registry.npm.taobao.org && \
     rm -rf /tmp/*
 
 ENV TZ Asia/Shanghai
+ENV LANG C.UTF-8
 ENV NODE_ENV production
 ENTRYPOINT ["/bin/sh","run.sh"]
