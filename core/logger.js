@@ -1,3 +1,4 @@
+"use strict";
 var log4js = require('log4js');
 
 log4js.configure({
@@ -9,7 +10,7 @@ log4js.configure({
     },
     replaceConsole: true,
     categories:{
-        default: { appenders: ['console'], level: 'info' },
+        default: { appenders: ['console','access'], level: 'info' },
         access: { appenders: ['access'], level: 'all' },
         image: { appenders: ['image'], level: 'info' },
         error: { appenders: ['error'], level: 'error' },
@@ -17,8 +18,8 @@ log4js.configure({
 });
 
 module.exports ={
-        access: log4js.getLogger('access'),
+        conosle:log4js.getLogger('default'),
         image: log4js.getLogger('image'),
         error: log4js.getLogger('error'),
-        express: log4js.connectLogger(log4js.getLogger('access'), {level: 'info'})
+        express: log4js.connectLogger(log4js.getLogger('default'), {level: 'info'})
 };

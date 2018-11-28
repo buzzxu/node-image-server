@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('picture-ser:server');
 var http = require('http');
 const config = require('../config/config')
+const logger = require('../core/logger')
 
 
 /**
@@ -89,6 +90,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-    console.log('%s已经启动,正监听:%s', config.name, config.port);
-    console.log('图片目录:%s', config.UploadDir);
+    logger.conosle.info('%s已经启动,正监听:%s', config.name, config.port);
+    logger.conosle.info('图片目录:%s', config.UploadDir);
 }
