@@ -1,4 +1,4 @@
-FROM node:11.8.0-alpine
+FROM node:11.9.0-alpine
 
 MAINTAINER buzzxu <downloadxu@163.com>
 
