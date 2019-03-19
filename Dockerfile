@@ -1,4 +1,4 @@
-FROM node:11-alpine
+FROM node:alpine
 
 MAINTAINER buzzxu <downloadxu@163.com>
 
@@ -11,9 +11,9 @@ RUN apk update && apk upgrade && \
 COPY . /app
 WORKDIR /app
 COPY run.sh .
-
-RUN npm install --production --registry=https://registry.npm.taobao.org && \
-    npm install pm2 -g --registry=https://registry.npm.taobao.org && \
+#--registry=https://registry.npm.taobao.org
+RUN npm install --production  && \
+    npm install pm2 -g  && \
     apk del git && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
