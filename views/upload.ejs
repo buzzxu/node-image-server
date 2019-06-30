@@ -28,6 +28,9 @@
             // 上传完成后, 返回json, text
             dataType: 'json',
             // 上传之前回调,return true表示可继续上传
+            beforeSend:function(xhr, data){
+                xhr.setRequestHeader('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.e30.oMoxECbW9P29dfupP8NsXuBnbswedUdnjZcbfPcgswn4DnjccIjA1zW1DA26NrwCD8fprZlXQCDzJMKcIFzC_Q');
+            },
             onSend: function() {
                 return true;
             },

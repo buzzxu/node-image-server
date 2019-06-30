@@ -1,7 +1,7 @@
 const conifg = require('./config')
 
 const Local = require('./Local')
-const Aliyun = require('./oss/Aliyun')
+const OSS = require('./OSS')
 
 
 module.exports = {
@@ -10,10 +10,10 @@ module.exports = {
         switch (conifg.model) {
             case 'local':
                 this.IMAGE = new Local()
-                this.IMAGE.check('/data/images');
+                this.IMAGE.check(conifg.DIR_UPLOAD);
                 break;
-            case 'aliyun':
-                this.IMAGE = new Aliyun()
+            case 'oss':
+                this.IMAGE = new OSS()
                 break;
             default:
                 this.IMAGE = new Local()

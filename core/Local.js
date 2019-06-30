@@ -4,7 +4,6 @@ const _ = require('lodash')
 const etag = require('etag')
 const util = require('util')
 const path = require('path')
-const uuid = require('uuid-js')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const fse = require('fs-extra')
@@ -47,9 +46,6 @@ module.exports = class Local extends Image{
      * @returns {Promise<*>}
      */
     async write(files,params){
-        if(_.isEmpty(params.folder)){
-            throw new JsonError(400,'必须传入图片文件夹')
-        }
         let pathArgs = params.folder.replace(/\n/g, '')
         if (pathArgs) {
             pathArgs = pathArgs.substr(1).split('/')
@@ -215,7 +211,19 @@ module.exports = class Local extends Image{
      * @param file
      * @returns {Promise<boolean>}
      */
-    async delete(params,file){
+    async delete(params,files){
+        if(_.isArray(files) && files.length > 0){
+            for(let file of files){
+                await this.$delete(params,file)
+            }
+            return true
+        }else {
+            return await this.$delete(params,files)
+        }
+    }
+
+
+    async $delete(params,file){
         let $file = getUploadDir(file)
         if(fs.existsSync($file)){
             try{
@@ -238,7 +246,6 @@ module.exports = class Local extends Image{
             throw new JsonError(404,'图片地址有误或此图片已被删除')
         }
     }
-
 }
 /**
  * 多张图片转gif
@@ -365,7 +372,7 @@ const createNewImage =(pathArgs, ext,change)=> {
     let args = [config.DIR_UPLOAD]
     let filePath
     if(_.isNil(change) || change){
-        pathArgs[pathArgs.length - 1] =uuid.create(1).toString().replace(/-/g, '')
+        pathArgs[pathArgs.length - 1] = $util.genName()
     }
     args.push.apply(args, pathArgs)
     filePath = path.join.apply(path, args) + '.' + ext

@@ -19,7 +19,6 @@ const index = require('./routes/index')
 const images = require('./routes/images')
 
 core.choose()
-core.IMAGE.check(path.join(__dirname, 'img'))
 // error handler
 // onerror(app)
 // logger

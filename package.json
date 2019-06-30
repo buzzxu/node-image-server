@@ -9,12 +9,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "debug": "^4.1.0",
+    "ali-oss": "^6.1.1",
+    "debug": "^4.1.1",
     "ejs": "^2.6.1",
     "etag": "^1.8.1",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^8.1.0",
     "gm": "^1.23.1",
-    "koa": "^2.6.2",
+    "koa": "^2.7.0",
     "koa-better-body": "^3.0.4",
     "koa-bodyparser": "^4.2.1",
     "koa-conditional-get": "^2.0.0",
@@ -22,16 +23,16 @@
     "koa-etag": "^3.0.0",
     "koa-json": "^2.0.2",
     "koa-jwt": "^3.5.1",
-    "koa-log4": "^2.3.0",
+    "koa-log4": "^2.3.2",
     "koa-logger": "^3.2.0",
     "koa-onerror": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
-    "koa-views": "^6.1.4",
+    "koa-views": "^6.2.0",
     "lodash": "^4.17.11",
     "mkdirp": "^0.5.1",
-    "moment": "^2.22.2",
-    "uuid-js": "^0.7.5"
+    "moment": "^2.24.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.18.7"

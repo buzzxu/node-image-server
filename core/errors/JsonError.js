@@ -11,6 +11,6 @@ module.exports=class JsonError extends Error{
     render(ctx){
         ctx.response.status = this.code
         ctx.type="application/json"
-        ctx.body = {message:this.message,code:this.code,success:false}
+        ctx.body = {message:this.message,code:this.code,success:false,stack:this.stack}
     }
 }

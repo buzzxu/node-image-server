@@ -90,5 +90,13 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
   logger.info('%s已经启动,正监听:%s', config.name, config.port);
-  logger.info('图片存储目录:%s',config.DIR_UPLOAD)
+  logger.info(`启动模式:${config.model}`);
+  switch (config.model) {
+    case "oss":
+      logger.info('oss配置:%s',config.oss)
+      break
+    case "local":
+      logger.info('图片存储目录:%s',config.DIR_UPLOAD)
+      break
+  }
 }

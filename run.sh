@@ -5,21 +5,39 @@ instance=max
 until [ $# -eq 0 ]
 do
  case "$1" in
+ --domain)
+    sed -i "9s/image.xingchenga.com/$2/g" $CONFIG_FILE
+    shift 2;;
+ --model)
+    sed -i "11s/local/$2/g" $CONFIG_FILE
+    shift 2;;
  --maxAge)
-  sed -i "11s/31536000/$2/g" $CONFIG_FILE
-  shift 2;;
+    sed -i "12s/31536000/$2/g" $CONFIG_FILE
+    shift 2;;
  --defalut-img)
-  sed -i "19s/default.png/$2/g" $CONFIG_FILE
-  shift 2;;
+    sed -i "20s/default.png/$2/g" $CONFIG_FILE
+    shift 2;;
  --jwt-secret)
- sed -i "21s/123456/$2/g" $CONFIG_FILE
- shift 2;;
+    sed -i "22s/123456/$2/g" $CONFIG_FILE
+    shift 2;;
  --jwt-algorithm)
- sed -i "22s/HS512/$2/g" $CONFIG_FILE
- shift 2;;
+    sed -i "23s/HS512/$2/g" $CONFIG_FILE
+    shift 2;;
+ --oss-region)
+    sed -i "27s/oss-cn-hongkong/$2/g" $CONFIG_FILE
+    shift 2;;
+ --oss-accesskey-id)
+    sed -i "28s/LTAIQc238s2yBAay/$2/g" $CONFIG_FILE
+    shift 2;;
+ --oss-accesskey-secret)
+    sed -i "29s/0El2qiinNGK8kl5COZNUgDiyedJ0Rg/$2/g" $CONFIG_FILE
+    shift 2;;
+ --oss-bucket)
+    sed -i "30s/sanyi-images/$2/g" $CONFIG_FILE
+    shift 2;;
  --instance)
- instance=$2
- shift 2;;
+    instance=$2
+    shift 2;;
  *) echo " unknow prop $1";shift;;
  esac
 done
