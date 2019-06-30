@@ -24,10 +24,10 @@ module.exports = {
         credentialsRequired: true
     },
     oss:{
-        region: 'oss-cn-hongkong',
-        accessKeyId: 'LTAIQc238s2yBAay',
-        accessKeySecret: '0El2qiinNGK8kl5COZNUgDiyedJ0Rg',
-        bucket: 'sanyi-images',
+        region: 'xux',
+        accessKeyId: 'xux',
+        accessKeySecret: 'xux',
+        bucket: 'xux',
         secure:true
     }
 }

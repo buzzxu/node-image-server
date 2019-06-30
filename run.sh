@@ -24,16 +24,16 @@ do
     sed -i "23s/HS512/$2/g" $CONFIG_FILE
     shift 2;;
  --oss-region)
-    sed -i "27s/oss-cn-hongkong/$2/g" $CONFIG_FILE
+    sed -i "27s/xux/$2/g" $CONFIG_FILE
     shift 2;;
  --oss-accesskey-id)
-    sed -i "28s/LTAIQc238s2yBAay/$2/g" $CONFIG_FILE
+    sed -i "28s/xux/$2/g" $CONFIG_FILE
     shift 2;;
  --oss-accesskey-secret)
-    sed -i "29s/0El2qiinNGK8kl5COZNUgDiyedJ0Rg/$2/g" $CONFIG_FILE
+    sed -i "29s/xux/$2/g" $CONFIG_FILE
     shift 2;;
  --oss-bucket)
-    sed -i "30s/sanyi-images/$2/g" $CONFIG_FILE
+    sed -i "30s/xux/$2/g" $CONFIG_FILE
     shift 2;;
  --instance)
     instance=$2
