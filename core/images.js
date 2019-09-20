@@ -1,7 +1,6 @@
 const _ = require('lodash')
 const util = require('util')
 const path = require('path')
-const uuid = require('uuid-js')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const fse = require('fs-extra')
