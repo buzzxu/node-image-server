@@ -64,7 +64,7 @@ module.exports.base64Info = (base64) =>{
  * @returns {boolean}
  */
 module.exports.ifImage = (path)=>{
-    let buffer = new Buffer(8)
+    let buffer = Buffer.alloc(8)
     let fd = fs.openSync(path, 'r')
     fs.readSync(fd, buffer, 0, 8, 0)
     let newBuf = buffer.slice(0, 4)
@@ -75,6 +75,7 @@ module.exports.ifImage = (path)=>{
     let typeCode = head_1 + head_2 + head_3 + head_4
     let flag = false
     switch (typeCode){
+        case 'ffd8ffe0': //jpeg
         case 'ffd8ffe1': //jpg
         case '47494638': //gif
         case '89504e47': //png
