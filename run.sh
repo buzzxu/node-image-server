@@ -2,6 +2,9 @@
 
 CONFIG_FILE=/app/core/config.js
 instance=max
+memory=100M
+max_space_old=768
+max_space_semi=64
 until [ $# -eq 0 ]
 do
  case "$1" in
@@ -38,13 +41,32 @@ do
  --instance)
     instance=$2
     shift 2;;
+ --memory)
+    memory=$2
+    shift 2;;
+ --max-old-space-size)
+    max_space_old=$2
+    shift 2;;
+ --max-semi-space-size)
+    max_space_semi=$2
+    shift 2;;
  *) echo " unknow prop $1";shift;;
  esac
 done
 
-echo "===================================="
+echo "============config.js==============="
 cat $CONFIG_FILE
 echo "===================================="
 
+echo "instance=$instance"
 
-pm2-runtime start bin/www  --env production -i $instance --name "image" --max-memory-restart 100M  --output /data/logs/out.log --error /data/logs/error.log
+if [ $instance -le 1  ]
+then
+    echo "max-old-space-size=$max_space_old"
+    echo "max-semi-space-size=$max_space_semi"
+    node --max-old-space-size=$max_space_old --max-semi-space-size=$max_space_semi bin/www
+else
+    echo "memory=$memory"
+    pm2-runtime start bin/www  --env production -i $instance --name "image" --max-memory-restart $memory  --output /data/logs/out.log --error /data/logs/error.log
+
+fi
