@@ -98,6 +98,7 @@ folder:目录  /a/b/c/
 filename:文件名
 支持参数
 ```
+`yarn upgrade-interactive --latest`
 
 
 

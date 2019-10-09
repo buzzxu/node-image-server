@@ -3,6 +3,7 @@ const path = require('path')
 const uuidv4 = require('uuid/v4')
 const Duplex = require('stream').Duplex
 const fs = require('fs')
+const CWebp = require('cwebp').CWebp;
 //是否支持图片
 module.exports.isSupportCT = (val) =>{
     for (let value of config.contentType.values()) {
@@ -93,4 +94,18 @@ module.exports.ifImage = (path)=>{
     }
     fs.closeSync(fd);
     return flag
+}
+
+/**
+ * 转化为webp格式
+ * @param input <string>
+ * @param output <string>
+ */
+module.exports.convert2Webp = (input,output)=>{
+    let encoder = CWebp(input)
+    encoder.write(output, (err) => {
+        if (err) {
+            throw error
+        }
+    });
 }
