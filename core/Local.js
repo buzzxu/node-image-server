@@ -13,7 +13,13 @@ const $util = require('./util')
 const ImageError = require('./errors/ImageError')
 const JsonError = require('./errors/JsonError')
 const resizeTag = ['!',"%",'^','>','<']
-
+const Redis = require('ioredis')
+const redis = new Redis({
+    host: config.redis.host,
+    port:config.redis.port,
+    password: config.redis.password != 'xux' ? config.redis.password : null,
+    db:config.redis.db
+})
 /**
  * 本地存储
  * @type {module.Local}
@@ -120,88 +126,94 @@ module.exports = class Local extends Image{
             error.code = 406
             throw error
         }else{
-            folders.push(filename)
-            let targetPath = getUploadDir(path.join.apply(path,folders))
-            let exists = fs.existsSync(targetPath)
-            if(exists){
-                let stat = fs.statSync(targetPath)
-                let $etag = etag(stat)
-                ctx.status=200
-                ctx.etag = $etag
-                ctx.lastModified=stat.mtime.toUTCString()
-                if(ctx.fresh){
-                    return {status:304}
-                }
-                let buffer
-                if(Object.keys(params).length === 0){
-                    //此处返回的是fs.ReadStream
-                    buffer = fs.createReadStream(targetPath)
-                } else if(Object.keys(params).length === 1 && !_.isNil(params.base64)){
-                    buffer = fs.readFileSync(targetPath)
+            let key = `${folders.join(':')}:${ctx.request.originalUrl}`
+            let buffer =  await redis.getBuffer(key)
+            if (buffer == null) {
+                folders.push(filename)
+                let targetPath = getUploadDir(path.join.apply(path,folders))
+                let exists = fs.existsSync(targetPath)
+                if(exists){
+                    let stat = fs.statSync(targetPath)
+                    let $etag = etag(stat)
+                    ctx.status=200
+                    ctx.etag = $etag
+                    ctx.lastModified=stat.mtime.toUTCString()
+                    if(ctx.fresh){
+                        return {status:304}
+                    }
+                    if(Object.keys(params).length === 0){
+                        //此处返回的是fs.ReadStream
+                        buffer = await $util.streamToBuffer(fs.createReadStream(targetPath,{
+                            highWaterMark: 64 * 1024
+                        }))
+                    } else if(Object.keys(params).length === 1 && !_.isNil(params.base64)){
+                        buffer = fs.readFileSync(targetPath)
+                    }else{
+                        let size = params.size
+                        let $gm = gm(targetPath).strip()
+                        if(!_.isEmpty(params.w) || ! _.isEmpty(params.h)){
+                            $gm.resize(_.toNumber(params.w),_.toNumber(params.h));
+                        }else if(!_.isEmpty(size)){
+                            let tag = size.charAt(size.length-1);
+                            let $size
+                            if(_.includes(resizeTag,tag)){
+                                $size = _.split(size.substr(0,size.length-1),'*',2)
+                            }else{
+                                tag = undefined
+                                $size = _.split(size,'*',2)
+                            }
+                            let width,height
+                            if(_.isEmpty($size[0])){
+                                width = null
+                            }else{
+                                width = _.toInteger($size[0]);
+                            }
+                            if(_.isEmpty($size[1])){
+                                height = null
+                            }else{
+                                height = _.toInteger($size[1]);
+                            }
+                            if (!_.isEmpty(tag)){
+                                // ! 表示强制width/height, resize(70, 70, '%')表示输出图片尺寸70x70，图片可能变形 即不考虑原始图宽高的比例
+                                // % 表示强制width/height, resize(70, 70, '%')表示输出图片尺寸70x70，图片可能变形 即不考虑原始图宽高的比例
+                                // ^ 表示最小width/height, resize(70,70,'^')表示width/height最小不能小于70px
+                                // > 表示只有源图片的width or height超过指定的width/height时，图片尺寸才会变。
+                                // < 表示只有源图片的width or height小于指定的width/height时，图片尺寸才会变
+                                $gm.resize(width, height,tag);
+                            }else{
+                                $gm.resize(width, height);
+                            }
+                        }
+                        if(!_.isEmpty(params.quality)){
+                            var quality = _.toInteger(params.quality);
+                            if (quality > 0 && quality <= 100){
+                                $gm.quality(quality)
+                            }
+                        }
+                        if(!_.isNil(params.line)){
+                            $gm.interlace('Line')
+                        }
+                        if(!_.isNil(params.webp)){
+                            fileExt = 'webp'
+                        }
+                        if(!_.isEmpty(params.format)){
+                            if(config.contentType.has(params.format)){
+                                fileExt = params.format
+                            }else{
+                                throw new ImageError(406)
+                            }
+                        }
+                        buffer = await gmBuffer($gm,fileExt)
+                    }
+                    await redis.set(key,buffer,'EX',config.redis.expire)
                 }else{
-                    let size = params.size
-                    let $gm = gm(targetPath).strip()
-                    if(!_.isEmpty(params.w) || ! _.isEmpty(params.h)){
-                        $gm.resize(_.toNumber(params.w),_.toNumber(params.h));
-                    }else if(!_.isEmpty(size)){
-                        let tag = size.charAt(size.length-1);
-                        let $size
-                        if(_.includes(resizeTag,tag)){
-                            $size = _.split(size.substr(0,size.length-1),'*',2)
-                        }else{
-                            tag = undefined
-                            $size = _.split(size,'*',2)
-                        }
-                        let width,height
-                        if(_.isEmpty($size[0])){
-                            width = null
-                        }else{
-                            width = _.toInteger($size[0]);
-                        }
-                        if(_.isEmpty($size[1])){
-                            height = null
-                        }else{
-                            height = _.toInteger($size[1]);
-                        }
-                        if (!_.isEmpty(tag)){
-                            // ! 表示强制width/height, resize(70, 70, '%')表示输出图片尺寸70x70，图片可能变形 即不考虑原始图宽高的比例
-                            // % 表示强制width/height, resize(70, 70, '%')表示输出图片尺寸70x70，图片可能变形 即不考虑原始图宽高的比例
-                            // ^ 表示最小width/height, resize(70,70,'^')表示width/height最小不能小于70px
-                            // > 表示只有源图片的width or height超过指定的width/height时，图片尺寸才会变。
-                            // < 表示只有源图片的width or height小于指定的width/height时，图片尺寸才会变
-                            $gm.resize(width, height,tag);
-                        }else{
-                            $gm.resize(width, height);
-                        }
-                    }
-                    if(!_.isEmpty(params.quality)){
-                        var quality = _.toInteger(params.quality);
-                        if (quality > 0 && quality <= 100){
-                            $gm.quality(quality)
-                        }
-                    }
-                    if(!_.isNil(params.line)){
-                        $gm.interlace('Line')
-                    }
-                    if(!_.isNil(params.webp)){
-                        fileExt = 'webp'
-                    }
-                    if(!_.isEmpty(params.format)){
-                        if(config.contentType.has(params.format)){
-                            fileExt = params.format
-                        }else{
-                            throw new ImageError(406)
-                        }
-                    }
-                    buffer = await gmBuffer($gm,fileExt)
+                    throw new ImageError(404)
                 }
-                if(!_.isNil(params.base64)){
-                    return {status:200,buffer:buffer.toString("base64"),contextType:'text/plan'}
-                }
-                return {status:200,buffer:buffer,contextType:config.contentType.get(fileExt)}
-            }else{
-                throw new ImageError(404)
             }
+            if(!_.isNil(params.base64)){
+                return {status:200,buffer:buffer.toString("base64"),contextType:'text/plan'}
+            }
+            return {status:200,buffer:buffer,contextType:config.contentType.get(fileExt)}
         }
     }
 

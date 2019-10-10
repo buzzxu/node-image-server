@@ -4,6 +4,7 @@ const uuidv4 = require('uuid/v4')
 const Duplex = require('stream').Duplex
 const fs = require('fs')
 const CWebp = require('cwebp').CWebp;
+const crypto = require('crypto')
 //是否支持图片
 module.exports.isSupportCT = (val) =>{
     for (let value of config.contentType.values()) {
@@ -24,6 +25,25 @@ module.exports.genName = () =>{
 }
 module.exports.pathName = (folder,file)=>{
     return path.format({dir:folder,name:this.genName(),ext:path.extname(file.name)})
+}
+
+module.exports.md5 = (str) =>{
+    return crypto.createHash('md5').update(str).digest('hex')
+}
+module.exports.streamToBuffer = (stream) =>{
+    return new Promise((resolve, reject) => {
+        let buffers = [];
+        stream.on('error', reject);
+        stream.on('data', (data) => buffers.push(data))
+        stream.on('end', () => resolve(Buffer.concat(buffers)))
+    });
+}
+
+module.exports.bufferToStream = (buffer) =>{
+    let stream = new Duplex();
+    stream.push(buffer);
+    stream.push(null);
+    return stream;
 }
 /**
  * base64编码转图片

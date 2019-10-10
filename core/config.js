@@ -29,5 +29,12 @@ module.exports = {
         accessKeySecret: 'xux',
         bucket: 'xux',
         secure:true
+    },
+    redis:{
+        host: '127.0.0.1',
+        port: 6379,
+        password: 'xux',
+        db: 1,
+        expire: 3600
     }
 }

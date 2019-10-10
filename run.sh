@@ -38,6 +38,21 @@ do
  --oss-bucket)
     sed -i "30s/xux/$2/g" $CONFIG_FILE
     shift 2;;
+ --redis-host)
+    sed -i "34s/127.0.0.1/$2/g" $CONFIG_FILE
+    shift 2;;
+ --redis-port)
+    sed -i "35s/6379/$2/g" $CONFIG_FILE
+    shift 2;;
+ --redis-password)
+    sed -i "36s/xux/$2/g" $CONFIG_FILE
+    shift 2;;
+ --redis-db)
+    sed -i "37s/1/$2/g" $CONFIG_FILE
+    shift 2;;
+ --redis-expire)
+    sed -i "38s/3600/$2/g" $CONFIG_FILE
+    shift 2;;
  --instance)
     instance=$2
     shift 2;;
