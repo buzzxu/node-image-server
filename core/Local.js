@@ -26,6 +26,8 @@ const redis = new Redis({
  */
 module.exports = class Local extends Image{
 
+    KEY_NOTFOUND = "notfound"
+
     constructor(...args){
         super(...args)
     }
@@ -109,6 +111,7 @@ module.exports = class Local extends Image{
             return result
         }
     }
+
     /**
      * 发送文件
      * @param params     设置参数
@@ -127,6 +130,11 @@ module.exports = class Local extends Image{
             throw error
         }else{
             let key = `${folders.join(':')}:${ctx.request.originalUrl}`
+            let key$notfound = `${this.KEY_NOTFOUND}:${key}`
+            //防止缓存穿透
+            if (await redis.exists(key$notfound)) {
+                throw new ImageError(404)
+            }
             let buffer =  await redis.getBuffer(key)
             if (buffer == null) {
                 folders.push(filename)
@@ -207,9 +215,13 @@ module.exports = class Local extends Image{
                     }
                     await redis.set(key,buffer,'EX',config.redis.expire)
                 }else{
+                    await redis.set(key$notfound,null,'EX',86400) //图片已经删除的需要做处理
                     throw new ImageError(404)
                 }
             }
+            /*else{
+                redis.expire(key,config.redis.expire)
+            }*/
             if(!_.isNil(params.base64)){
                 return {status:200,buffer:buffer.toString("base64"),contextType:'text/plan'}
             }
