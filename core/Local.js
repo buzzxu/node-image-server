@@ -130,13 +130,13 @@ module.exports = class Local extends Image{
             throw error
         }else{
             let key = `${folders.join(':')}:${ctx.request.originalUrl}`
-            let key$notfound = `${this.KEY_NOTFOUND}:${key}`
-            //防止缓存穿透
-            if (await redis.exists(key$notfound)) {
-                throw new ImageError(404)
-            }
             let buffer =  await redis.getBuffer(key)
+            let key$notfound = `${this.KEY_NOTFOUND}:${key}`
             if (buffer == null) {
+                //防止缓存穿透
+                if (await redis.exists(key$notfound)) {
+                    throw new ImageError(404)
+                }
                 folders.push(filename)
                 let targetPath = getUploadDir(path.join.apply(path,folders))
                 let exists = fs.existsSync(targetPath)
